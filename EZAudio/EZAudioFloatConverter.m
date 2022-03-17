@@ -200,6 +200,15 @@ OSStatus EZAudioFloatConverterCallback(AudioConverterRef             inAudioConv
                         toFloatBuffers:(float **)buffers
                     packetDescriptions:(AudioStreamPacketDescription *)packetDescriptions
 {
+    OSStatus status = AudioConverterFillComplexBuffer(self.info->converterRef,
+                                                      EZAudioFloatConverterCallback,
+                                                      audioBufferList,
+                                                      &frames,
+                                                      self.info->floatAudioBufferList,
+                                                      packetDescriptions ? packetDescriptions : self.info->packetDescriptions);
+    if (status > 0 ) {
+        AudioConverterReset(self.info->converterRef);
+    }
     if (frames != 0)
     {
         //
